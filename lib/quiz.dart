@@ -2,55 +2,65 @@ import 'package:adv_basics/data/questions.dart';
 import 'package:adv_basics/questions_screen.dart';
 import 'package:adv_basics/start_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:adv_basics/results_screen.dart';
 
-
-class Quiz extends StatefulWidget{
+class Quiz extends StatefulWidget {
   const Quiz({super.key});
   @override
-  State<Quiz> createState(){
+  State<Quiz> createState() {
     return _QuizState();
   }
 }
 
-  class _QuizState extends State<Quiz>{
-    List<String> selectedAnswers = [];
-    var activeScreen = 'start-screen';
-    
-    void switchScreen() {
+class _QuizState extends State<Quiz> {
+  List<String> selectedAnswers = [];
+  var activeScreen = 'start-screen';
+
+  void switchScreen() {
+    setState(() {
+      activeScreen = 'questions-screen';
+    });
+  }
+
+  void chooseAnswer(String answer) {
+    selectedAnswers.add(answer);
+
+    if (selectedAnswers.length == questions.length) {
       setState(() {
-        activeScreen = 'questions-screen';
+        //selectedAnswers = [];
+        activeScreen = 'results-screen';
       });
     }
+  }
 
-    void chooseAnswer (String answer) {
-      selectedAnswers.add(answer);
+  @override
+  Widget build(context) {
+    Widget screenWidget = StartScreen(switchScreen);
 
-      if(selectedAnswers.length == questions.length){
-        setState(() {
-          selectedAnswers = [];
-          activeScreen = 'start-screen';
-        });
-      }
+    if (activeScreen == 'questions-screen') {
+      screenWidget = QuestionsScreen(
+       onSelectAnswer: chooseAnswer,
+      );
     }
 
-    @override
-    Widget build(context){
-      return MaterialApp(
-      home: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(255, 83, 18, 196),
-                Color.fromARGB(255, 97, 41, 193),
-              ],
-              begin: Alignment.bottomLeft,
-              end: Alignment.bottomRight,
-            ),
+    if (activeScreen == 'results-screen') {
+      screenWidget = ResultsScreen(chooseAnswers: selectedAnswers);
+    }
+
+    return MaterialApp(
+        home: Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 83, 18, 196),
+              Color.fromARGB(255, 97, 41, 193),
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.bottomRight,
           ),
-        child: activeScreen == 'start-screen'
-            ? StartScreen(switchScreen)
-            : QuestionsScreen(onSelectAnswer: chooseAnswer),
+        ),
+        child: screenWidget,
       ),
     ));
   }
