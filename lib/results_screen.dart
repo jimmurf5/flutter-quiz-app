@@ -14,8 +14,8 @@ class ResultsScreen extends StatelessWidget {
     for (int i = 0; i < chooseAnswers.length; i++) {
       summary.add({
         'question_index': i,
-        'questions': questions[i],
-        'correct-answer': questions[i].answers[0],
+        'questions': questions[i].text,
+        'correct_answer': questions[i].answers[0],
         'user_answer': chooseAnswers[i]
       });
     }
@@ -28,7 +28,7 @@ class ResultsScreen extends StatelessWidget {
     final summaryData = getSummaryData();
     final numTotalQuestions = questions.length;
     final numCorrectQuestions = summaryData.where((data) {
-      return data['user_answer'] == data['correct-answer'];
+      return data['user_answer'] == data['correct_answer'];
     }).length;
 
     return SizedBox(

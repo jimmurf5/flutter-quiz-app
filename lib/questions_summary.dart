@@ -19,7 +19,7 @@ class QuestionsSummary extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        Text(data['question'] as String),
+                        Text(data['questions'] as String),
                         const SizedBox(
                           height: 5,
                         ),
